@@ -21,7 +21,7 @@ import renderer.light.PointLight;
  */
 
 public class Display extends Canvas implements Runnable{
-	private static String title = "Luma";
+	private static String title = "Luna";
 	private static boolean running = false;
 	public static final int WIDTH = 512;
 	public static final int HEIGHT = 512;
