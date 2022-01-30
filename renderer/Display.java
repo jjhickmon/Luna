@@ -33,7 +33,8 @@ public class Display extends Canvas implements Runnable{
 	private Shape cube;
     private Shape pyramid;
     private Mesh mesh;
-    public static PointLight light = new PointLight(new double[]{0, 0, 1});
+    public static PointLight light = new PointLight(new double[]{0, 0, -1});
+    public static int time = 0;
 
 	public Display(){
 		this.frame  = new JFrame();
@@ -116,18 +117,18 @@ public class Display extends Canvas implements Runnable{
         //    |--- +x 
         // +z/
 		this.cube = new Cube();
-        this.cube.translate(new double[] {0, -1.5, 0});
+        // this.cube.translate(new double[] {0, -1.5, 0});
 
-        this.pyramid = new Pyramid();
-        this.pyramid.translate(new double[] {-2.5, -.5, -4.5});
+        // this.pyramid = new Pyramid();
+        // this.pyramid.translate(new double[] {-2.5, -.5, -4.5});
 
-        String filePath = "textured.obj";
+        String filePath = "teapot.obj";
         File cubeMesh = new File("renderer/src/" + filePath);
         this.mesh = new Mesh(cubeMesh);
         // this.mesh.rotate(Math.toRadians(30), 'y');
         // this.mesh.rotate(Math.toRadians(20), 'x');
-        this.mesh.scale(20);
-        this.mesh.translate(new double[]{0, 0, 0});
+        // this.mesh.scale(50);
+        // this.mesh.translate(new double[]{0, 0, 0});
 	}
 
 	private void render(){
@@ -140,16 +141,17 @@ public class Display extends Canvas implements Runnable{
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        this.cube.rotate(Math.toRadians(.5), 'x');
-        this.cube.rotate(Math.toRadians(1), 'y');
-        this.cube.render(g);
+        // this.cube.rotate(Math.toRadians(.5), 'x');
+        // this.cube.rotate(Math.toRadians(1), 'y');
+        // this.cube.render(g);
 
         // this.pyramid.rotate(Math.toRadians(1), 'y');
         // this.pyramid.render(g); 
 
         // this.mesh.rotate(Math.toRadians(.5), 'x');
         // this.mesh.rotate(Math.toRadians(1), 'y');
-        // this.mesh.render(g);
+        this.mesh.render(g);
+        time++;
 
 		g.dispose();
 		b.show();

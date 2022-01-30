@@ -1,0 +1,5 @@
+To Do:
+    - Add parameters to Camera.convertToCanonical so I can specify the projection matrix parameters.
+        - rename to Camera.project();
+    - Make the shape's rotation a map?
+    - Have less conversions by making polygons store their points as vectors

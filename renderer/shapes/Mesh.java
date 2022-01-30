@@ -9,26 +9,23 @@ import java.util.Scanner;
 public class Mesh extends Shape{
     public ArrayList<ArrayList<Double[]>> mesh = new ArrayList<>();
     public double[][][] points;
-    public Color[] colors = {Color.WHITE};
+    public Color color;
 
     public Mesh(File objFile) throws FileNotFoundException {
         this.load(objFile);
         super.points = this.points;
-        super.colors = this.colors;
         init();
     }
 
     public Mesh(File objFile, double size) throws FileNotFoundException {
         this.load(objFile);
         super.points = this.points;
-        super.colors = this.colors;
         init(size);
     }
 
     public Mesh(File objFile, double size, double[] translate) throws FileNotFoundException {
         this.load(objFile);
         super.points = this.points;
-        super.colors = this.colors;
         init(size, translate);
     }
 

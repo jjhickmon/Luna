@@ -5,9 +5,13 @@ import java.awt.Color;
 public class Luminance {
     public static Color illuminate(Color color, double intensity) {
         int[] luminance = new int[3];
-        luminance[0] = (int)(Math.round(Math.pow(intensity, 50) * color.getRed()));
-        luminance[1] = (int)(Math.round(Math.pow(intensity, 50) * color.getGreen()));
-        luminance[2] = (int)(Math.round(Math.pow(intensity, 50) * color.getBlue()));
+        // luminance[0] = (int)Math.min(Math.round(Math.pow(intensity, 50) * color.getRed()), 255);
+        // luminance[1] = (int)Math.min(Math.round(Math.pow(intensity, 50) * color.getGreen()), 255);
+        // luminance[2] = (int)Math.min(Math.round(Math.pow(intensity, 50) * color.getBlue()), 255);
+
+        luminance[0] = (int)Math.min(Math.round(intensity * color.getRed()), 255);
+        luminance[1] = (int)Math.min(Math.round(intensity * color.getGreen()), 255);
+        luminance[2] = (int)Math.min(Math.round(intensity * color.getBlue()), 255);
         return new Color(luminance[0], luminance[1], luminance[2]);
     }
 
