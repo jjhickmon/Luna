@@ -6,8 +6,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import java.util.Arrays;
+
 public class Mesh extends Shape{
-    public ArrayList<ArrayList<Double[]>> mesh = new ArrayList<>();
+    public ArrayList<Double[][]> mesh = new ArrayList<>();
     public double[][][] points;
     public Color color;
 
@@ -32,41 +34,53 @@ public class Mesh extends Shape{
     public void load(File objFile) throws FileNotFoundException, NumberFormatException{
         ArrayList<Double[]> vertices = new ArrayList<>();
         Scanner read = new Scanner(objFile);
-
+        // create my variables up here, then reuse them so I don't run out of memory while parsing
+        String line;
+        String[] points = new String[3]; // triangles are used in .obj files
+        Double[] vertex = new Double[points.length];
         while (read.hasNextLine()){
-            String line = read.nextLine();
+            line = read.nextLine();
+            // creates vertices then adds them a list for future use
             if (line.isEmpty()) {continue;}
             if (line.charAt(0) == 'v' && line.charAt(1) == ' '){
-                String[] points = line.substring(2).split(" ");
-                Double[] vertex = new Double[points.length];
-                for (int i = 0; i < points.length; i++) {
+                points = line.substring(2).split(" ");
+                vertex = new Double[points.length];
+                for (int i = 0; i < vertex.length; i++) {
                     vertex[i] = Double.valueOf(Double.parseDouble(points[i]));
                 }
                 vertices.add(vertex);
             }
+
+            // creates polygons consisting of the vertices that the face tag specifies
             if (line.charAt(0) == 'f' && line.charAt(1) == ' '){
-                ArrayList<Double[]> face = new ArrayList<>();
                 String[] faceVertices = line.substring(2).split(" ");
-                for (int j = 0; j < faceVertices.length; j++) {
+                // faces can consist of a variable number of vertices, so I have to create a new one each time
+                Double[][] poly = new Double[faceVertices.length][vertex.length];
+                for (int i = 0; i < poly.length; i++) {
                     int index;
-                    if (faceVertices[j].contains("/")) {
-                        index = Integer.parseInt(faceVertices[j].substring(0, faceVertices[j].indexOf("/"))) - 1;
+                    if (faceVertices[i].contains("/")) {
+                        index = Integer.parseInt(faceVertices[i].substring(0, faceVertices[i].indexOf("/"))) - 1;
                     } else {
-                        index = Integer.parseInt(faceVertices[j]) - 1;
+                        index = Integer.parseInt(faceVertices[i]) - 1;
                     }
-                    
-                    face.add(vertices.get(index));
+                    poly[i] = vertices.get(index);
                 }
-                this.mesh.add(face);
+                this.mesh.add(poly);
             }
         }
         read.close();
 
-        this.points = new double[this.mesh.size()][this.mesh.get(0).size()][this.mesh.get(0).get(0).length];
+        // each face can have a variable number of vertices, so I will create it dynamically
+        this.points = new double[this.mesh.size()][][];
+        // goes through every polygon in the mesh
         for (int i = 0; i < this.mesh.size(); i++){
-            for (int j = 0; j < this.mesh.get(0).size(); j++){
-                for (int k = 0; k < this.mesh.get(0).get(0).length; k++){
-                    this.points[i][j][k] = this.mesh.get(i).get(j)[k];
+            this.points[i] = new double[this.mesh.get(i).length][];
+            // goes through every point in the polygon
+            for (int j = 0; j < this.points[i].length; j++){
+                this.points[i][j] = new double[points.length];
+                // goes through every component of the point
+                for (int k = 0; k < this.points[i][j].length; k++){
+                    this.points[i][j][k] = this.mesh.get(i)[j][k];
                 }
             }
         }

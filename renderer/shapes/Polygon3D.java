@@ -34,7 +34,7 @@ public class Polygon3D {
         this.points = points;
         this.scale = scale;
         for (int i = 0; i < this.points.length; i++) {
-            this.points[i] = Point.translatePoint(this.points[i], translate);
+            this.points[i] = Point.translate(this.points[i], translate);
         }
     }
 
@@ -59,7 +59,7 @@ public class Polygon3D {
     }
 
     public Polygon3D transform(double[][] worldMatrix) {
-        Polygon3D polyTransformed = new Polygon3D(this.color, new double[this.points.length][this.points[0].length]);
+        Polygon3D polyTransformed = new Polygon3D(this.color, new double[this.points.length][3]);
         for (int i = 0; i < this.points.length; i++) {
             polyTransformed.points[i] = Vector.toPoint(Matrix.multiplyMatrices(worldMatrix, Point.toVector(this.points[i])));
         }
@@ -67,41 +67,31 @@ public class Polygon3D {
     }
 
     public Polygon3D project(double[][] projectionMatrix) {
-        Polygon3D polyProjected = new Polygon3D(this.color, new double[this.points.length][this.points[0].length]);
+        Polygon3D polyProjected = new Polygon3D(this.color, new double[this.points.length][3]);
 
         // Convert points to 2D space
         double[] offset = {1, 1, 0};
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < this.points.length; i++) {
             polyProjected.points[i] = Vector.toPoint(Matrix.multiplyMatrices(projectionMatrix, Point.toVector(this.points[i])));
-            // I might not need this check anymore
+
             if (polyProjected.points[i][3] != 0) {
                 polyProjected.points[i] = Vector.toPoint(Vector.divide(Point.toVector(polyProjected.points[i]), polyProjected.points[i][3]));
             }
+            // if (polyProjected.points[i][0] <= 0 && polyProjected.points[i][1] <= 0) {
+            //     System.out.println("--" + Arrays.toString(polyProjected.points[i]));
+            // }
             
             // X/Y are inverted so put them back
             polyProjected.points[i][0] = -polyProjected.points[i][0];
             polyProjected.points[i][1] = -polyProjected.points[i][1];
 
             polyProjected.points[i] = Vector.toPoint(Vector.add(Point.toVector(polyProjected.points[i]), Point.toVector(offset)));// scale
-            polyProjected.points[i] = Point.scalePoint(polyProjected.points[i], this.scale);
+            polyProjected.points[i] = Point.scale(polyProjected.points[i], this.scale);
             
             // zoom kinda
             polyProjected.points[i][0] *= 0.5 * Display.WIDTH;
             polyProjected.points[i][1] *= 0.5 * Display.HEIGHT;
-            // newPoint = Camera.convertToCanonical(newPoint);
-            // newPoint = PointConverter.scalePoint(newPoint, this.scale);
-            // pointsCanonical[i] = newPoint;
         }
-
-        // for (int i = 0; i < 3; i++) {
-        //     // Uninvert the x and y coordinates
-        //     polyProjected.points[i][0] = -polyProjected.points[i][0];
-        //     polyProjected.points[i][1] = -polyProjected.points[i][1];
-
-        //     polyProjected.points[i] = Vector.toPoint(Vector.add(Point.toVector(polyProjected.points[i]), Point.toVector(offset))); 
-        //     polyProjected.points[i][0] *= Display.WIDTH * 0.5;
-        //     polyProjected.points[i][1] *= Display.HEIGHT * 0.5;
-        // }
 
         return polyProjected;
     }

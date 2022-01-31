@@ -3,3 +3,4 @@ To Do:
         - rename to Camera.project();
     - Make the shape's rotation a map?
     - Have less conversions by making polygons store their points as vectors
+    - Replace all 3's with Point.COMPONENTS (since 3d points always have 3 primary components)

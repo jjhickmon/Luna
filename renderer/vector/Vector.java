@@ -71,8 +71,11 @@ public class Vector {
     // normalizes a vector (turns it into a unit vector)
     public static double[][] normalize(double[][] vector) {
         double[][] unitVector = new double[4][1];
-        for (int i = 0; i < 3; i++) {
-            unitVector[i][0] = vector[i][0] / getLength(vector);
+        double length = getLength(vector);
+        if (length > 0) {
+            for (int i = 0; i < 3; i++) {
+                unitVector[i][0] = vector[i][0] / length;
+            }
         }
         unitVector[3][0] = 1;
         return unitVector;

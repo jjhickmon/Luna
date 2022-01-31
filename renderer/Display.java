@@ -122,12 +122,12 @@ public class Display extends Canvas implements Runnable{
         // this.pyramid = new Pyramid();
         // this.pyramid.translate(new double[] {-2.5, -.5, -4.5});
 
-        String filePath = "teapot.obj";
+        String filePath = "cottage.obj";
         File cubeMesh = new File("renderer/src/" + filePath);
         this.mesh = new Mesh(cubeMesh);
         // this.mesh.rotate(Math.toRadians(30), 'y');
         // this.mesh.rotate(Math.toRadians(20), 'x');
-        // this.mesh.scale(50);
+        // this.mesh.scale(.5);
         // this.mesh.translate(new double[]{0, 0, 0});
 	}
 

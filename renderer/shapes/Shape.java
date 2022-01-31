@@ -67,7 +67,7 @@ public class Shape {
     public void scale(double scale) {
         for (Polygon3D face : this.faces) {
             for (int i = 0; i < face.points.length; i++) {
-                face.points[i] = Point.scalePoint(face.points[i], scale);
+                face.points[i] = Point.scale(face.points[i], scale);
             }
         }
     }
@@ -80,22 +80,18 @@ public class Shape {
     //     }
     // }
 
-    // public void translate(double[] translate) {
-    //     for (Polygon3D face : this.faces) {
-    //         for (int i = 0; i < face.points.length; i++) {
-    //             face.points[i] = PointConverter.translatePoint(face.points[i], translate);
-    //         }
-    //     }
-    // }
+    public void translate(double[] translate) {
+        for (Polygon3D face : this.faces) {
+            for (int i = 0; i < face.points.length; i++) {
+                face.points[i] = Point.translate(face.points[i], translate);
+            }
+        }
+    }
 
     public void render(Graphics g) {
         List<Polygon3D> projectedFaces = new ArrayList<>();
 
-        // translate into view
-        double[] translation = {0, 0, 16};
-        // for(int j = 0; j < Camera.location.length; j++) {
-        //     translation[j] -= Camera.location[j];
-        // }
+        double[] translation = {0, -1, 16};
         double[][] translationMatrix = Matrix.translationMatrix(translation);
         // rotate about the origin
         double[][] rotZ = Matrix.rotationMatrix('z', Display.time * 0.5 % 360);
@@ -104,7 +100,7 @@ public class Shape {
         // double[][] rotX = Matrix.rotationMatrix('x', Display.time % 360);
         // needs to be 4x4 to account for translation and projection
         double[][] worldMatrix = Matrix.identityMatrix(4);
-        worldMatrix = Matrix.multiplyMatrices(worldMatrix, rotY);
+        worldMatrix = Matrix.multiplyMatrices(rotY, worldMatrix);
         worldMatrix = Matrix.multiplyMatrices(translationMatrix, worldMatrix);
 
 		for (Polygon3D poly : faces) {

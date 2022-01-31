@@ -23,6 +23,6 @@ class SortFaces implements Comparator<Polygon3D> {
         double midpoint1 = (a_sum * a.scale) / a.points.length;
         double midpoint2 = (b_sum * b.scale) / b.points.length;
         boolean compare = midpoint1 < midpoint2;
-        return (midpoint1 == midpoint2 ? 0 : (compare ? 1 : -1));
+        return ((midpoint1 == midpoint2 ? 0 : compare ? 1 : -1));
     }
 }
