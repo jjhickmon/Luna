@@ -1,18 +1,18 @@
-package renderer.shapes;
+package luna.shapes;
 
 import java.awt.Graphics;
 import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
+
+import luna.Display;
+import luna.camera.Camera;
+import luna.light.Luminance;
+import luna.math.Matrix;
+import luna.point.Point;
+import luna.vector.Vector;
+
 import java.util.ArrayList;
-
-import renderer.Display;
-import renderer.camera.Camera;
-import renderer.math.Matrix;
-import renderer.point.Point;
-import renderer.vector.Vector;
-import renderer.light.Luminance;
-
 import java.util.Arrays;
 
 public class Shape {
@@ -94,14 +94,15 @@ public class Shape {
         double[] translation = {0, -1, 16};
         double[][] translationMatrix = Matrix.translationMatrix(translation);
         // rotate about the origin
-        double[][] rotZ = Matrix.rotationMatrix('z', Display.time * 0.5 % 360);
         double[][] rotY = Matrix.rotationMatrix('y', Display.time % 360);
-        // double[][] rotY = Matrix.rotationMatrix('y', 45);
-        // double[][] rotX = Matrix.rotationMatrix('x', Display.time % 360);
-        // needs to be 4x4 to account for translation and projection
+        // create the world matrix
         double[][] worldMatrix = Matrix.identityMatrix(4);
         worldMatrix = Matrix.multiplyMatrices(rotY, worldMatrix);
         worldMatrix = Matrix.multiplyMatrices(translationMatrix, worldMatrix);
+        // create the view matrix
+        double[][] target = Vector.add(Camera.location, Camera.direction);
+        Camera.cameraMatrix = Matrix.pointAtMatrix(Camera.location, target, Camera.up);
+        double[][] viewMatrix = Matrix.lookAtMatrix(Camera.cameraMatrix);
 
 		for (Polygon3D poly : faces) {
             Polygon3D polyTransformed = poly.transform(worldMatrix);
@@ -112,12 +113,10 @@ public class Shape {
                 double[][] light_direction = Vector.normalize(Point.toVector(Display.light.direction));
                 double intensity = Math.max(0.1, Vector.dotProduct(light_direction, normal));
                 polyTransformed.color = Luminance.illuminate(polyTransformed.color, intensity);
-
-                // Convert World Space to View Space
-                // Figure out matView first
-
+                // Convert from world space to view space
+                Polygon3D polyViewed = polyTransformed.view(viewMatrix);
                 // Project from 3D to 2D
-                Polygon3D polyProjected = polyTransformed.project(Camera.projectionMatrix);
+                Polygon3D polyProjected = polyViewed.project(Camera.projectionMatrix);
                 // store for sorting
                 projectedFaces.add(polyProjected);
             }

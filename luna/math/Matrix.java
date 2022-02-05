@@ -1,8 +1,45 @@
-package renderer.math;
+package luna.math;
+
+import java.util.Arrays;
+
+import luna.point.Point;
+import luna.vector.Vector;
 
 public class Matrix {
     public static double[][] identityMatrix(int n) {
         return transformationMatrix(n, n);
+    }
+
+    /*
+     * Creates and returns the matrix to make the camera point at a target
+     */
+    public static double[][] pointAtMatrix(double[][] position, double[][] target, double[][] world_up) {
+        double[][] forward = Vector.normalize(Vector.subtract(target, position));
+        // the rotated up direction
+        double[][] rot_up = Vector.multiply(forward, Vector.dotProduct(world_up, forward));
+        double[][] up = Vector.subtract(world_up, rot_up);
+        double[][] right = Vector.crossProduct(up, forward);
+        double[][] pointAtMatrix = {
+            {right[0][0], up[0][0], forward[0][0], position[0][0]},
+            {right[1][0], up[1][0], forward[1][0], position[1][0]},
+            {right[2][0], up[2][0], forward[2][0], position[2][0]},
+            {0, 0, 0, 1}
+        };
+        return pointAtMatrix;
+    }
+
+    /*
+     * The view matrix is just the inverse of the pointAtMatrix,
+     * This method is just a shorthand method of finding the inverse of a given pointAt matrix
+     */
+    public static double[][] lookAtMatrix(double[][] pointAt) {
+        double[][] lookAtMatrix = {
+            {pointAt[0][0], pointAt[1][0], pointAt[2][0], -(pointAt[0][3] * pointAt[0][0] + pointAt[1][3] * pointAt[1][0] + pointAt[2][3] * pointAt[2][0])},
+            {pointAt[0][1], pointAt[1][1], pointAt[2][1], -(pointAt[0][3] * pointAt[0][1] + pointAt[1][3] * pointAt[1][1] + pointAt[2][3] * pointAt[2][1])},
+            {pointAt[0][2], pointAt[1][2], pointAt[2][2], -(pointAt[0][3] * pointAt[0][2] + pointAt[1][3] * pointAt[1][2] + pointAt[2][3] * pointAt[2][2])},
+            {0, 0, 0, 1}
+        };
+        return lookAtMatrix;
     }
 
     public static double[][] projectionMatrix(double SCALE, double ASPECT_RATIO, double DFAR, double DNEAR) {
@@ -12,13 +49,6 @@ public class Matrix {
             {0, 0, (DFAR + DNEAR) / (DNEAR - DFAR), (-2 * DFAR * DNEAR) / (DFAR - DNEAR)},
             {0, 0, 1, 0},
         };
-
-        // return new double[][] {
-        //     {SCALE * ASPECT_RATIO, 0, 0, 0},
-        //     {0, SCALE, 0, 0},
-        //     {0, 0, (DFAR) / (DFAR - DNEAR), 1},
-        //     {0, 0, (DFAR * DNEAR) / (DFAR - DNEAR), 0},
-        // };
     }
 
     // n is the dimension of the output, m is the dimension of the input
@@ -91,10 +121,11 @@ public class Matrix {
         return product;
     }
 
-    // public static double[][] inverse(double[][] a) {
-    //     double[] translatedLocation = new double[pointsCanonical[0].length];
-    //     for (int k = 0; k < translatedLocation.length; k++) {
-    //         translatedLocation[k] = pointsCanonical[0][k] - Camera.location[k];
-    //     }
-    // }
+    public static String toString(double[][] matrix) {
+        String str = "";
+        for (int i = 0; i < matrix.length; i++) {
+            str += Arrays.toString(matrix[i]) + "\n";
+        }
+        return str;
+    }
 }

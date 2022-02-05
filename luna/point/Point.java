@@ -1,7 +1,8 @@
-package renderer.point;
+package luna.point;
 
 import java.util.Arrays;
-import renderer.math.Matrix;
+
+import luna.math.Matrix;
 
 public class Point {
     public static int COMPONENTS = 3;
@@ -72,5 +73,12 @@ public class Point {
         return point;
     }
 
-    
+    public static String toString(double[] point) {
+        String str = "";
+        for (int i = 0; i < point.length; i++) {
+            str += ", " + point[i];
+        }
+        str = "{" + str.substring(2) + "}";
+        return str;
+    }
 }

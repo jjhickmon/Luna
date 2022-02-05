@@ -1,9 +1,9 @@
-package renderer.shapes;
+package luna.shapes;
 
 import java.awt.Color;
 
-public class Pyramid extends Shape {
-    public Color color = Color.WHITE;
+public class Cube extends Shape {
+    private Color color = Color.WHITE;
     // cube faces numbered accordingly
     // https://selfreconfigurable.com/?p=760
     // every face point starts at the bottom left,
@@ -12,40 +12,49 @@ public class Pyramid extends Shape {
         {
             {0, 0, 0},
             {1, 0, 0},
-            {0.5, 1, 0.5}
+            {1, 1, 0},
+            {0, 1, 0}
         },{
             {1, 0, 0},
             {1, 0, 1},
-            {0.5, 1, 0.5}
+            {1, 1, 1},
+            {1, 1, 0}
         },{
+            {0, 0, 1},
             {1, 0, 1},
-            {0, 0, 1},
-            {0.5, 1, 0.5}
-        },{
-            {0, 0, 1},
-            {0, 0, 0},
-            {0.5, 1, 0.5}
-        },{
-            {0, 0, 0},
             {1, 0, 0},
+            {0, 0, 0}
+        },{
+            {0, 1, 0},
+            {1, 1, 0},
+            {1, 1, 1},
+            {0, 1, 1}
+        },{
+            {0, 0, 1},
+            {0, 0, 0},
+            {0, 1, 0},
+            {0, 1, 1}
+        },{
             {1, 0, 1},
-            {0, 0, 1}
+            {0, 0, 1},
+            {0, 1, 1},
+            {1, 1, 1}
         },
     };
 
-    public Pyramid() {
+    public Cube() {
         super.points = this.points;
         super.color = this.color;
         init();
     }
 
-    public Pyramid(double size) {
+    public Cube(double size) {
         super.points = this.points;
         super.color = this.color;
         init(size);
     }
 
-    public Pyramid(double size, double[] translate) {
+    public Cube(double size, double[] translate) {
         super.points = this.points;
         super.color = this.color;
         init(size, translate);

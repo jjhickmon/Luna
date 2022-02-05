@@ -1,4 +1,4 @@
-package renderer.vector;
+package luna.vector;
 
 public class Vector {
      // converts a vector into a point
@@ -79,5 +79,14 @@ public class Vector {
         }
         unitVector[3][0] = 1;
         return unitVector;
+    }
+
+    public static String toString(double[][] vector) {
+        String str = "";
+        for (int i = 0; i < vector.length; i++) {
+            str += ", " + vector[i][0];
+        }
+        str = "{" + str.substring(2) + "}";
+        return str;
     }
 }

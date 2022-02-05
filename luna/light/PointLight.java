@@ -1,4 +1,4 @@
-package renderer.light;
+package luna.light;
 
 public class PointLight extends Light{
     public double[] direction;

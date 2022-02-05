@@ -1,4 +1,4 @@
-package renderer.light;
+package luna.light;
 
 import java.awt.Color;
 

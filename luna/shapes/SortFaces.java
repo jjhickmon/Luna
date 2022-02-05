@@ -1,4 +1,4 @@
-package renderer.shapes;
+package luna.shapes;
 
 import java.util.Comparator;
 
